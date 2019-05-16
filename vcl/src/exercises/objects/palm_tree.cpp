@@ -23,14 +23,6 @@ void Palm_tree::setup() {
 	std::uniform_real_distribution<float> distrib(0.0,1.0);
 	std::default_random_engine generator;
 
-	//hierarchy.add_element(body, "body", "root", {0,0,0});
-	//hierarchy.add_element(neck, "neck", "body", {0,0.8f*r_body1,0});
-	//hierarchy.add_element(head, "head", "neck", {0,0,1.2f*r_head});
-	//hierarchy.add_element(belly, "belly", "body", {0,0,0});
-	//hierarchy.add_element(foot, "foot_left", "body", {0.625f*r_body0,-0.8f*r_body1,0}, rotation_from_axis_angle_mat3({0,1,0}, 0.5f));
-	//hierarchy.add_element(foot, "foot_right", "body", {-0.625f*r_body0,-0.8f*r_body1,0}, rotation_from_axis_angle_mat3({0,1,0}, -0.5f));
-
-
 	// Create visual cylinder surface
 	mesh_drawable trunk = create_curved_cylinder(trunk_radius, angle, r0, r2, {0, 0, 0});
 	trunk.uniform_parameter.color = {0.815f, 0.729f, 0.623f};
@@ -73,13 +65,6 @@ void Palm_tree::setup() {
 	}
 
 	palm_tree.add_element(top, "top", "trunk", {0, 0, 2*r2*sin(angle)});
-
-	//palm_tree.add_element(leaves, "leaves", "root", {0,0,-0.1f});
-
-	// Create visual cone surface
-	//cone = create_cone(2.0f, 3.0f, 4.0f);
-	//cone.uniform_parameter.color = {0.6f,0.85f,0.5f};
-	//cone.uniform_parameter.shading.specular = 0.0f; // vec3(0.0f, 0.0f, 0.8f)non-specular terrain material
 
 }
 

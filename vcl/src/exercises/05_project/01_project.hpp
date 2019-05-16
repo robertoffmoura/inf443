@@ -7,6 +7,7 @@
 #include "../objects/skybox.hpp"
 #include "../objects/penguin.hpp"
 #include "../objects/trajectory.hpp"
+#include "../objects/tree.hpp"
 
 #ifdef INF443_01_PROJECT
 // Stores some parameters that can be set from the GUI
@@ -42,18 +43,16 @@ struct scene_exercise : base_scene_exercise
     void set_gui();
 
     void setup_terrain();
-    void setup_tree();
     void setup_mushroom();
     void setup_flower();
     void setup_grass();
 
     void draw_terrain(std::map<std::string,GLuint>& shaders, scene_structure& scene);
-    void draw_tree(std::map<std::string,GLuint>& shaders, scene_structure& scene);
     void draw_mushroom(std::map<std::string,GLuint>& shaders, scene_structure& scene);
     void draw_grass(std::map<std::string,GLuint>& shaders, scene_structure& scene);
     void draw_flower(std::map<std::string,GLuint>& shaders, scene_structure& scene);
 
-    void update_tree_position();
+    void set_tree_position();
     void update_mushroom_position();
     void update_bill_grass_position();
     void update_bill_flower_position();
@@ -62,19 +61,13 @@ struct scene_exercise : base_scene_exercise
     GLuint terrain_texture_id;
     GLuint bill_grass_texture_id;
     GLuint bill_flower_texture_id;
-	
-
-    std::vector<vcl::vec3> tree_position;
     std::vector<vcl::vec3> mushroom_position;
     std::vector<vcl::vec3> grass_position;
     std::vector<vcl::vec3> flower_position;
     // visual representation of a surface
     vcl::mesh_drawable terrain;
 
-    vcl::mesh_drawable cone;
-
-    vcl::mesh_drawable cylinder; // tree
-    vcl::mesh_drawable foliage; // tree
+	Tree tree;
 
     vcl::mesh_drawable mushroom_cylinder;
     vcl::mesh_drawable mushroom_cone;

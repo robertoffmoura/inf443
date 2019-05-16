@@ -14,12 +14,6 @@ float evaluate_terrain_z(float u, float v);
 vec3 evaluate_terrain(float u, float v, const gui_scene_structure& gui_scene);
 mesh create_terrain(const gui_scene_structure& gui_scene);
 
-vec3 evaluate_cylinder(float u, float v, int ku, float radius, float height);
-mesh create_cylinder(float radius, float height);
-
-mesh create_cone(float radius, float height, float z_offset);
-mesh create_tree_foliage(float radius, float height, float z_offset);
-
 bool valid_tree_position(float u, float v, vector<vector<bool>> &grid, size_t grid_len, float terrain_size, float tree_radius);
 bool valid_grid_coordinates(int i, int j, size_t grid_len);
 void update_tree_position_grid(float u, float v, vector<vector<bool>> &grid, size_t grid_len, float terrain_size, float tree_radius);
@@ -39,13 +33,13 @@ void scene_exercise::setup_data(std::map<std::string,GLuint>& , scene_structure&
 	penguin.setup(0.5f);
 
 	update_terrain();
-	update_tree_position();
+	set_tree_position();
 	update_mushroom_position();
 	update_bill_grass_position();
 	update_bill_flower_position();
 
 	setup_terrain();
-	setup_tree();
+	tree.setup();
 	setup_mushroom();
 	setup_grass();
 	setup_flower();
@@ -72,7 +66,7 @@ void scene_exercise::frame_draw(std::map<std::string,GLuint>& shaders, scene_str
 	glPolygonOffset( 1.0, 1.0 );
 
 	draw_terrain(shaders, scene);
-	draw_tree(shaders, scene);
+	tree.draw(shaders, scene, gui_scene.wireframe);
 	draw_mushroom(shaders, scene);
 	palm_tree.draw(shaders, scene, gui_scene.wireframe);
 
@@ -94,23 +88,6 @@ void scene_exercise::setup_terrain() {
 	//terrain = create_terrain();
 	//terrain.uniform_parameter.color = {0.6f, 0.85f, 0.5f};
 	terrain.uniform_parameter.shading.specular = 0.0f; // non-specular terrain material
-}
-
-void scene_exercise::setup_tree() {
-	// Create visual cylinder surface
-	cylinder = create_cylinder(0.1f, 0.8f);
-	cylinder.uniform_parameter.color = {0.396f, 0.263f, 0.129f};
-	cylinder.uniform_parameter.shading.specular = 0.0f; // non-specular terrain material
-
-	// Create visual cone surface
-	//cone = create_cone(2.0f, 3.0f, 4.0f);
-	//cone.uniform_parameter.color = {0.6f,0.85f,0.5f};
-	//cone.uniform_parameter.shading.specular = 0.0f; // vec3(0.0f, 0.0f, 0.8f)non-specular terrain material
-
-	// Create visual foliage surface
-	foliage = create_tree_foliage(0.4f, 0.6f, 0.24f);
-	foliage.uniform_parameter.color = {0.36f, 0.51f, 0.3f};
-	foliage.uniform_parameter.shading.specular = 0.0f;
 }
 
 
@@ -167,22 +144,6 @@ void scene_exercise::draw_terrain(std::map<std::string,GLuint>& shaders, scene_s
 	}
 }
 
-void scene_exercise::draw_tree(std::map<std::string,GLuint>& shaders, scene_structure& scene) {
-	for (size_t i=0; i < tree_position.size(); i++) {
-		cylinder.uniform_parameter.translation = tree_position[i] + vec3(0.0f, 0.0f, -0.05f);
-		cylinder.draw(shaders["mesh"], scene.camera);
-		foliage.uniform_parameter.translation = tree_position[i] + vec3(0.0f, 0.0f, -0.05f) + vec3(0.0f, 0.0f, 0.8f);
-		foliage.draw(shaders["mesh"], scene.camera);
-	}
-	if( gui_scene.wireframe ){ // wireframe if asked from the GUI
-		for (size_t i=0; i< tree_position.size(); i++) {
-			cylinder.uniform_parameter.translation = tree_position[i] + vec3(0.0f, 0.0f, -0.05f);
-			cylinder.draw(shaders["wireframe"], scene.camera);
-			foliage.uniform_parameter.translation = tree_position[i] + vec3(0.0f, 0.0f, -0.05f) + vec3(0.0f, 0.0f, 0.8f);
-			foliage.draw(shaders["wireframe"], scene.camera);
-		}
-	}
-}
 
 void scene_exercise::draw_mushroom(std::map<std::string,GLuint>& shaders, scene_structure& scene) {
 	for (size_t i=0; i < mushroom_position.size(); i++) {
@@ -376,90 +337,8 @@ mesh create_terrain(const gui_scene_structure& gui_scene) {
 	return terrain;
 }
 
-// Evaluate 3D position of the cylinder for any (u,v) \in [0,1]
-vec3 evaluate_cylinder(float u, float v, int ku, float radius, float height) {
-	const float x = radius*u;
-	const float y = radius*v;
-	const float z = ku%2 * height;
 
-	return {x,y,z};
-}
-
-mesh create_cylinder(float radius, float height) {
-	const size_t N = 20;
-
-	mesh cylinder; // temporary terrain storage (CPU only)
-	cylinder.position.resize(2*N);
-
-	// Fill cylinder geometry
-	for(size_t ku=0; ku<2*N; ++ku) {
-		// Compute local parametric coordinates (u,v) \in [0,1]
-		const float u = sin(ku/2*2 /(2.0*N) * 2*M_PI );
-		const float v = cos(ku/2*2 /(2.0*N) * 2*M_PI );
-
-		// Compute coordinates
-		cylinder.position[ku] = evaluate_cylinder(u,v,ku, radius, height);
-	}
-
-	// Generate triangle organization
-	for(unsigned int ku=0; ku<N-1; ++ku)
-	{
-		const index3 triangle = {2*ku, 2*ku + 1, 2*ku + 2};
-		const index3 triangle2 = {2*ku + 3, 2*ku + 2, 2*ku + 1};
-		cylinder.connectivity.push_back(triangle);
-		cylinder.connectivity.push_back(triangle2);
-	}
-	const index3 triangle = {2*N-2, 2*N-1, 0};
-	const index3 triangle2 = {1,     0, 2*N-1};
-	cylinder.connectivity.push_back(triangle);
-	cylinder.connectivity.push_back(triangle2);
-
-	return cylinder;
-}
-
-mesh create_cone(float radius, float height, float z_offset) {
-	const size_t N = 20;
-
-	mesh cone; // temporary terrain storage (CPU only)
-	cone.position.resize(N+2);
-
-	// Fill cylinder geometry
-	for(size_t ku=0; ku<N; ++ku) {
-		// Compute local parametric coordinates (u,v) \in [0,1]
-		const float u = sin(ku /(N+0.0) * 2*M_PI );
-		const float v = cos(ku /(N+0.0) * 2*M_PI );
-
-		// Compute coordinates
-		cone.position[ku] = {radius*u, radius*v, z_offset};
-	}
-	cone.position[N] = {0, 0, z_offset};
-	cone.position[N+1] = {0, 0, z_offset + height};
-
-	// Generate triangle organization
-	for (unsigned int ku=0; ku<N-1; ++ku) {
-		const index3 triangle = {(ku+1), ku, N};
-		const index3 triangle2 = {(ku+1), ku, N+1};
-		cone.connectivity.push_back(triangle);
-		cone.connectivity.push_back(triangle2);
-	}
-	const index3 triangle = {0, N-1, N};
-	const index3 triangle2 = {0, N-1, N+1};
-	cone.connectivity.push_back(triangle);
-	cone.connectivity.push_back(triangle2);
-
-	return cone;
-}
-
-mesh create_tree_foliage(float radius, float height, float z_offset) {
-	mesh m = create_cone(radius, height, 0);
-	m.push_back( create_cone(radius, height, z_offset) );
-	m.push_back( create_cone(radius, height, 2*z_offset) );
-
-	return m;
-}
-
-
-void scene_exercise::update_tree_position() {
+void scene_exercise::set_tree_position() {
 	std::uniform_real_distribution<float> distrib(0.0,1.0);
 	std::default_random_engine generator;
 	size_t number_of_trees = 40;
@@ -486,7 +365,7 @@ void scene_exercise::update_tree_position() {
 			u = distrib(generator);
 			v = distrib(generator);
 		}
-		tree_position.push_back(evaluate_terrain(u,v, gui_scene));
+		tree.tree_position.push_back(evaluate_terrain(u,v, gui_scene));
 		update_tree_position_grid(u, v, grid, grid_len, terrain_size, tree_radius);
 	}
 	print_grid(grid);
