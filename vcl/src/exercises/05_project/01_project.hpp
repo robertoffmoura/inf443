@@ -8,6 +8,7 @@
 #include "../objects/penguin.hpp"
 #include "../objects/trajectory.hpp"
 #include "../objects/tree.hpp"
+#include "../objects/mushroom.hpp"
 
 #ifdef INF443_01_PROJECT
 // Stores some parameters that can be set from the GUI
@@ -43,34 +44,29 @@ struct scene_exercise : base_scene_exercise
     void set_gui();
 
     void setup_terrain();
-    void setup_mushroom();
     void setup_flower();
     void setup_grass();
 
     void draw_terrain(std::map<std::string,GLuint>& shaders, scene_structure& scene);
-    void draw_mushroom(std::map<std::string,GLuint>& shaders, scene_structure& scene);
     void draw_grass(std::map<std::string,GLuint>& shaders, scene_structure& scene);
     void draw_flower(std::map<std::string,GLuint>& shaders, scene_structure& scene);
 
     void set_tree_position();
-    void update_mushroom_position();
-    void update_bill_grass_position();
-    void update_bill_flower_position();
-    void update_terrain();
+    void set_mushroom_position();
+    void set_bill_grass_position();
+    void set_bill_flower_position();
+    void set_terrain();
 
     GLuint terrain_texture_id;
     GLuint bill_grass_texture_id;
     GLuint bill_flower_texture_id;
-    std::vector<vcl::vec3> mushroom_position;
     std::vector<vcl::vec3> grass_position;
     std::vector<vcl::vec3> flower_position;
     // visual representation of a surface
     vcl::mesh_drawable terrain;
 
 	Tree tree;
-
-    vcl::mesh_drawable mushroom_cylinder;
-    vcl::mesh_drawable mushroom_cone;
+	Mushroom mushroom;
 
     vcl::mesh_drawable grass_surface;
     vcl::mesh_drawable flower_surface;

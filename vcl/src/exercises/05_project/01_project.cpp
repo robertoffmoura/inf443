@@ -32,15 +32,15 @@ void scene_exercise::setup_data(std::map<std::string,GLuint>& , scene_structure&
 	trajectory.setup();
 	penguin.setup(0.5f);
 
-	update_terrain();
+	set_terrain();
 	set_tree_position();
-	update_mushroom_position();
-	update_bill_grass_position();
-	update_bill_flower_position();
+	set_mushroom_position();
+	set_bill_grass_position();
+	set_bill_flower_position();
 
 	setup_terrain();
 	tree.setup();
-	setup_mushroom();
+	mushroom.setup();
 	setup_grass();
 	setup_flower();
 	skybox.setup();
@@ -67,7 +67,7 @@ void scene_exercise::frame_draw(std::map<std::string,GLuint>& shaders, scene_str
 
 	draw_terrain(shaders, scene);
 	tree.draw(shaders, scene, gui_scene.wireframe);
-	draw_mushroom(shaders, scene);
+	mushroom.draw(shaders, scene, gui_scene.wireframe);
 	palm_tree.draw(shaders, scene, gui_scene.wireframe);
 
 	// Disable depth buffer writing
@@ -88,18 +88,6 @@ void scene_exercise::setup_terrain() {
 	//terrain = create_terrain();
 	//terrain.uniform_parameter.color = {0.6f, 0.85f, 0.5f};
 	terrain.uniform_parameter.shading.specular = 0.0f; // non-specular terrain material
-}
-
-
-void scene_exercise::setup_mushroom() {
-	// Create visual cylinder surface
-	mushroom_cylinder = create_cylinder(0.02f, 0.08f);
-	mushroom_cylinder.uniform_parameter.color = {0.9f, 0.9f, 0.9f};
-	mushroom_cylinder.uniform_parameter.shading.specular = 0.0f; // non-specular terrain material
-
-	mushroom_cone = create_cone(0.08f, 0.05f, 0.08f);
-	mushroom_cone.uniform_parameter.color = {0.9f,0.0f,0.0f};
-	mushroom_cone.uniform_parameter.shading.specular = 0.0f; // non-specular terrain material
 }
 
 void scene_exercise::setup_grass() {
@@ -144,24 +132,6 @@ void scene_exercise::draw_terrain(std::map<std::string,GLuint>& shaders, scene_s
 	}
 }
 
-
-void scene_exercise::draw_mushroom(std::map<std::string,GLuint>& shaders, scene_structure& scene) {
-	for (size_t i=0; i < mushroom_position.size(); i++) {
-		mushroom_cylinder.uniform_parameter.translation = mushroom_position[i] + vec3(0.0f, 0.0f, -0.02f);
-		mushroom_cylinder.draw(shaders["mesh"], scene.camera);
-		mushroom_cone.uniform_parameter.translation = mushroom_position[i] + vec3(0.0f, 0.0f, -0.02f);
-		mushroom_cone.draw(shaders["mesh"], scene.camera);
-	}
-
-	if( gui_scene.wireframe ){ // wireframe if asked from the GUI
-		for (size_t i=0; i < mushroom_position.size(); i++) {
-			mushroom_cylinder.uniform_parameter.translation = mushroom_position[i] + vec3(0.0f, 0.0f, -0.02f);
-			mushroom_cylinder.draw(shaders["wireframe"], scene.camera);
-			mushroom_cone.uniform_parameter.translation = mushroom_position[i] + vec3(0.0f, 0.0f, -0.02f);
-			mushroom_cone.draw(shaders["wireframe"], scene.camera);
-		}
-	}
-}
 
 void scene_exercise::draw_flower(std::map<std::string,GLuint>& shaders, scene_structure& scene) {
 	// Enable use of alpha component as color blending for transparent elements
@@ -222,7 +192,7 @@ void scene_exercise::mouse_move(scene_structure& scene, GLFWwindow* window) {
 	trajectory.mouse_move(scene, window);
 }
 
-void scene_exercise::update_terrain() {
+void scene_exercise::set_terrain() {
 	// Clear memory in case of pre-existing terrain
 	terrain.data_gpu.clear();
 
@@ -446,7 +416,7 @@ void update_tree_position_grid(float u, float v, vector<vector<bool>> &grid, siz
 	}
 }
 
-void scene_exercise::update_mushroom_position() {
+void scene_exercise::set_mushroom_position() {
 	unsigned seed = 2;
 	std::uniform_real_distribution<float> distrib(0.0,1.0);
 	std::default_random_engine generator(seed);
@@ -455,11 +425,11 @@ void scene_exercise::update_mushroom_position() {
 	for (size_t i=0; i<number_of_mushrooms; i++) {
 		float u = distrib(generator);
 		float v = distrib(generator);
-		mushroom_position.push_back(evaluate_terrain(u,v, gui_scene));
+		mushroom.mushroom_position.push_back(evaluate_terrain(u,v, gui_scene));
 	}
 }
 
-void scene_exercise::update_bill_grass_position() {
+void scene_exercise::set_bill_grass_position() {
 	unsigned seed = 3;
 	std::uniform_real_distribution<float> distrib(0.0,1.0);
 	std::default_random_engine generator(seed);
@@ -472,7 +442,7 @@ void scene_exercise::update_bill_grass_position() {
 	}
 }
 
-void scene_exercise::update_bill_flower_position() {
+void scene_exercise::set_bill_flower_position() {
 	unsigned seed = 4;
 	std::uniform_real_distribution<float> distrib(0.0,1.0);
 	std::default_random_engine generator(seed);
