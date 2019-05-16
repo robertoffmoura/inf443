@@ -4,7 +4,7 @@ using namespace vcl;
 
 mesh create_skybox();
 
-void skybox::setup() {
+void Skybox::setup() {
 	//sky_texture_id = texture_gpu( image_load_png("data/skybox3.png") );
 	skybox_texture_id = texture_gpu( image_load_png("data/skybox2.png") );
 
@@ -25,7 +25,7 @@ void skybox::setup() {
 }
 
 
-void skybox::draw(std::map<std::string,GLuint>& shaders, scene_structure& scene, bool wireframe) {
+void Skybox::draw(std::map<std::string,GLuint>& shaders, scene_structure& scene, bool wireframe) {
 	// Display a billboard always facing the camera direction
 	// ********************************************************** //
 	glBindTexture(GL_TEXTURE_2D, skybox_texture_id);
@@ -33,9 +33,9 @@ void skybox::draw(std::map<std::string,GLuint>& shaders, scene_structure& scene,
 	skybox.uniform_parameter.translation = scene.camera.camera_position() + vec3(0,0,-25.0f);
 
 	skybox.draw(shaders["mesh"], scene.camera);
-	if(wireframe)
+	if (wireframe) {
 		skybox.draw(shaders["wireframe"], scene.camera);
-
+	}
 	/*
 	glBindTexture(GL_TEXTURE_2D, sky_texture_id);
 

@@ -6,7 +6,7 @@ using namespace vcl;
 mesh create_leaves(float angle, float r0, float r2, vec3 translation);
 mesh create_curved_cylinder(float r_cylinder, float angle, float r0, float r2, vec3 translation);
 
-void palm_tree::setup() {
+void Palm_tree::setup() {
 	float angle = 0.8f;
 	float r0 = 1.0f;
 	float r2 = 2.0f;
@@ -83,7 +83,7 @@ void palm_tree::setup() {
 
 }
 
-void palm_tree::draw(std::map<std::string,GLuint>& shaders, scene_structure& scene, bool wireframe) {
+void Palm_tree::draw(std::map<std::string,GLuint>& shaders, scene_structure& scene, bool wireframe) {
 	palm_tree.draw(shaders["mesh"], scene.camera);
 	if( wireframe ){ // wireframe if asked from the GUI
 		palm_tree.draw(shaders["wireframe"], scene.camera);

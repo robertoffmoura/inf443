@@ -5,6 +5,8 @@
 #include <vector>
 #include "../objects/palm_tree.hpp"
 #include "../objects/skybox.hpp"
+#include "../objects/penguin.hpp"
+#include "../objects/trajectory.hpp"
 
 #ifdef INF443_01_PROJECT
 // Stores some parameters that can be set from the GUI
@@ -79,34 +81,16 @@ struct scene_exercise : base_scene_exercise
 
     vcl::mesh_drawable grass_surface;
     vcl::mesh_drawable flower_surface;
-	skybox skybox;
+	Skybox skybox;
 
     // Called every time the mouse is clicked
     void mouse_click(scene_structure& scene, GLFWwindow* window, int button, int action, int mods);
     // Called every time the mouse is moved
     void mouse_move(scene_structure& scene, GLFWwindow* window);
-    // Data (p_i,t_i)
-    std::vector<vcl::vec3> keyframe_position; // Given positions
-    std::vector<float> keyframe_time;         // Time at given positions
 
-    //vcl::mesh_drawable surface;                            // moving point
-    vcl::mesh_drawable sphere;                             // keyframe samples
-    vcl::segment_drawable_immediate_mode segment_drawer;   // used to draw segments between keyframe samples
-    vcl::curve_dynamic_drawable trajectory;                // Draw the trajectory of the moving point as a curve
-    void create_trajectory();
-    void draw_trajectory(std::map<std::string,GLuint>& shaders, scene_structure& scene);
-
-    // Store the index of a selected sphere
-    int picked_object;
-    vcl::timer_interval timer;
-
-    vcl::mesh_drawable_hierarchy hierarchy;
-    void create_penguin(float scale);
-    void draw_penguin(std::map<std::string,GLuint>& shaders, scene_structure& scene);
-    vcl::timer_interval penguin_timer;
-
-	//vcl::mesh_drawable_hierarchy palm_tree;
-	palm_tree palm_tree;
+	Trajectory trajectory;
+	Penguin penguin;
+	Palm_tree palm_tree;
 
     gui_scene_structure gui_scene;
 };
