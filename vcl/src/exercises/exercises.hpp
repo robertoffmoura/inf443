@@ -1,0 +1,27 @@
+#pragma once
+
+#include "base_exercise/base_exercise.hpp"
+/*
+#include "00_introduction/00_introduction.hpp"
+#include "01_modelisation/01_modelisation.hpp"
+#include "01_modelisation/02_modelisation.hpp"
+#include "01_modelisation/03_modelisation.hpp"
+#include "01_modelisation/04_modelisation.hpp"
+#include "01_modelisation/05_modelisation.hpp"
+#include "01_modelisation/06_modelisation.hpp"
+#include "01_modelisation/07_modelisation.hpp"
+#include "01_modelisation/08_modelisation.hpp"
+#include "01_modelisation/09_modelisation.hpp"
+#include "01_modelisation/10_modelisation.hpp"
+*/
+#include "02_texture/example_texture.hpp"
+#include "02_texture/example_perlin.hpp"
+#include "02_texture/example_billboard.hpp"
+#include "03_animation/example_animated_hierarchy.hpp"
+#include "03_animation/example_interpolation.hpp"
+#include "03_animation/animated_interpolation.hpp"
+#include "03_animation/animated_interpolation_2.hpp"
+#include "03_animation/03_solution.hpp"
+#include "04_simulation/example_sphere_gravity.hpp"
+#include "04_simulation/example_mass_spring.hpp"
+#include "05_project/01_project.hpp"
