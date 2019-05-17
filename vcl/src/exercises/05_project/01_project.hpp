@@ -11,20 +11,11 @@
 #include "../objects/mushroom.hpp"
 #include "../objects/grass.hpp"
 #include "../objects/flower.hpp"
+#include "../objects/terrain.hpp"
+#include "../objects/gui.hpp"
 
 #ifdef INF443_01_PROJECT
 // Stores some parameters that can be set from the GUI
-struct gui_scene_structure
-{
-    bool wireframe;
-
-    float height = 0.2f;
-    float scaling = 6.0f;
-    int octave = 7;
-    float persistency = 0.5f;
-
-	bool trajectory = false;
-};
 
 struct scene_exercise : base_scene_exercise
 {
@@ -45,18 +36,13 @@ struct scene_exercise : base_scene_exercise
     void frame_draw(std::map<std::string,GLuint>& shaders, scene_structure& scene, gui_structure& gui);
     void set_gui();
 
-    void setup_terrain();
-
-    void draw_terrain(std::map<std::string,GLuint>& shaders, scene_structure& scene);
-
     void set_tree_position();
     void set_mushroom_position();
     void set_bill_grass_position();
     void set_bill_flower_position();
 
-    GLuint terrain_texture_id;
     // visual representation of a surface
-    vcl::mesh_drawable terrain;
+    Terrain terrain;
 
 	Tree tree;
 	Mushroom mushroom;
