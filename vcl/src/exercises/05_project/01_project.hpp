@@ -36,11 +36,6 @@ struct scene_exercise : base_scene_exercise
     void frame_draw(std::map<std::string,GLuint>& shaders, scene_structure& scene, gui_structure& gui);
     void set_gui();
 
-    void set_tree_position();
-    void set_mushroom_position();
-    void set_bill_grass_position();
-    void set_bill_flower_position();
-
     // visual representation of a surface
     Terrain terrain;
 

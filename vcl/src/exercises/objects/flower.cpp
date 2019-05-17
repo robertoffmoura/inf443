@@ -1,4 +1,6 @@
 #include "flower.hpp"
+#include "terrain.hpp"
+#include <random>
 
 using namespace vcl;
 
@@ -36,4 +38,17 @@ void Flower::draw(std::map<std::string,GLuint>& shaders, scene_structure& scene,
 		}
 	}
 	glBindTexture(GL_TEXTURE_2D, scene.texture_white);
+}
+
+void Flower::set_bill_flower_position(gui_scene_structure& gui_scene, Terrain& terrain) {
+	unsigned seed = 4;
+	std::uniform_real_distribution<float> distrib(0.0,1.0);
+	std::default_random_engine generator(seed);
+	size_t number_of_flowers = 40;
+
+	for (size_t i=0; i<number_of_flowers; i++) {
+		float u = distrib(generator);
+		float v = distrib(generator);
+		flower_position.push_back(terrain.evaluate_terrain(u,v, gui_scene));
+	}
 }

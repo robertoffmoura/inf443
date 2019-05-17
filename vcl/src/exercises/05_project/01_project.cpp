@@ -10,23 +10,16 @@ using std::vector;
 #include <iostream>
 
 
-bool valid_tree_position(float u, float v, vector<vector<bool>> &grid, size_t grid_len, float terrain_size, float tree_radius);
-bool valid_grid_coordinates(int i, int j, size_t grid_len);
-void update_tree_position_grid(float u, float v, vector<vector<bool>> &grid, size_t grid_len, float terrain_size, float tree_radius);
-
-void print_grid(vector<vector<bool>> &grid);
-//vector<ivec2> get_tree_neighbors(float u, float v);
-
 /** This function is called before the beginning of the animation loop
 	It is used to initialize all part-specific data */
 void scene_exercise::setup_data(std::map<std::string,GLuint>& , scene_structure& scene, gui_structure& ) {
 	trajectory.setup();
 	penguin.setup(0.5f);
 
-	set_tree_position();
-	set_mushroom_position();
-	set_bill_grass_position();
-	set_bill_flower_position();
+	tree.set_tree_position(gui_scene, terrain);
+	mushroom.set_mushroom_position(gui_scene, terrain);
+	grass.set_bill_grass_position(gui_scene, terrain);
+	flower.set_bill_flower_position(gui_scene, terrain);
 
 	terrain.setup(gui_scene);
 	tree.setup();
@@ -77,154 +70,6 @@ void scene_exercise::mouse_click(scene_structure& scene, GLFWwindow* window, int
 
 void scene_exercise::mouse_move(scene_structure& scene, GLFWwindow* window) {
 	trajectory.mouse_move(scene, window);
-}
-
-
-void scene_exercise::set_tree_position() {
-	std::uniform_real_distribution<float> distrib(0.0,1.0);
-	std::default_random_engine generator;
-	size_t number_of_trees = 40;
-
-	float tree_radius = 0.4f;
-	float square_size = 0.8f; //approximately equal to 2 tree radii
-	float terrain_size = 20.0f;
-	size_t grid_len = terrain_size / square_size + 1;
-	//bool grid[grid_len][grid_len];
-	vector<vector<bool>> grid(grid_len, vector<bool>(grid_len));
-	for(size_t i = 0; i < grid_len; i++){
-		for(size_t j = 0; j < grid_len; j++){
-			grid[i][j] = false;
-		}
-	}
-	print_grid(grid);
-
-	for (size_t i=0; i<number_of_trees; i++) {
-		float u = distrib(generator);
-		float v = distrib(generator);
-		//vector<ivec2> neighbors = get_tree_neighbors(u, v);
-
-		while (!valid_tree_position(u, v, grid, grid_len, terrain_size, tree_radius)) {
-			u = distrib(generator);
-			v = distrib(generator);
-		}
-		tree.tree_position.push_back(terrain.evaluate_terrain(u,v, gui_scene));
-		update_tree_position_grid(u, v, grid, grid_len, terrain_size, tree_radius);
-	}
-	print_grid(grid);
-}
-
-bool valid_grid_coordinates(int i, int j, size_t grid_len) {
-	if (i < 0 || i >= (int) grid_len) return false;
-	if (j < 0 || j >= (int) grid_len) return false;
-	return true;
-}
-
-/*
-vector<ivec2> get_tree_neighbors(float u, float v)
-{
-	vector<ivec2> result;
-	int dx[] = {1, 1, -1, -1};
-	int dy[] = {1, -1, 1, -1};
-	float x;
-	float y;
-	int i;
-	int j;
-	for (int k=0; k<4; k++) {
-		x = u * terrain_size + dx[k] * tree_radius;
-		y = v * terrain_size + dy[k] * tree_radius;
-		i = (x * grid_len) / terrain_size;
-		j = (y * grid_len) / terrain_size;
-		std::cout << i << ", " << j << std::endl;
-		if (!valid_grid_coordinates(i, j, grid_len)) continue;
-		if (grid[i][j] == false) continue;
-		result.push_back(ivec2(i, j));
-	}
-	return result;
-}
-*/
-
-bool valid_tree_position(float u, float v, vector<vector<bool>> &grid, size_t grid_len, float terrain_size, float tree_radius) {
-	int dx[] = {1, 1, -1, -1};
-	int dy[] = {1, -1, 1, -1};
-	float x;
-	float y;
-	int i;
-	int j;
-	for (int k=0; k<4; k++) {
-		x = u * terrain_size + dx[k] * tree_radius;
-		y = v * terrain_size + dy[k] * tree_radius;
-		i = (x * grid_len) / terrain_size;
-		j = (y * grid_len) / terrain_size;
-		if (!valid_grid_coordinates(i, j, grid_len)) continue;
-		if (grid[i][j] == true) return false;
-	}
-	return true;
-}
-
-void print_grid(vector<vector<bool>> &grid) {
-	size_t grid_len = grid.size();
-	for(size_t i = 0; i < grid_len; i++){
-		for(size_t j = 0; j < grid_len; j++){
-			std::cout << grid[i][j] << " ";
-		}
-		std::cout << std::endl;
-	}
-}
-
-void update_tree_position_grid(float u, float v, vector<vector<bool>> &grid, size_t grid_len, float terrain_size, float tree_radius) {
-	int dx[] = {1, 1, -1, -1};
-	int dy[] = {1, -1, 1, -1};
-	float x;
-	float y;
-	int i;
-	int j;
-	for (int k=0; k<4; k++) {
-		x = u * terrain_size + dx[k] * tree_radius;
-		y = v * terrain_size + dy[k] * tree_radius;
-		i = x * grid_len / terrain_size;
-		j = y * grid_len / terrain_size;
-		if (!valid_grid_coordinates(i, j, grid_len)) continue;
-		grid[i][j] = true;
-	}
-}
-
-void scene_exercise::set_mushroom_position() {
-	unsigned seed = 2;
-	std::uniform_real_distribution<float> distrib(0.0,1.0);
-	std::default_random_engine generator(seed);
-	size_t number_of_mushrooms = 40;
-
-	for (size_t i=0; i<number_of_mushrooms; i++) {
-		float u = distrib(generator);
-		float v = distrib(generator);
-		mushroom.mushroom_position.push_back(terrain.evaluate_terrain(u,v, gui_scene));
-	}
-}
-
-void scene_exercise::set_bill_grass_position() {
-	unsigned seed = 3;
-	std::uniform_real_distribution<float> distrib(0.0,1.0);
-	std::default_random_engine generator(seed);
-	size_t number_of_grass = 40;
-
-	for (size_t i=0; i<number_of_grass; i++) {
-		float u = distrib(generator);
-		float v = distrib(generator);
-		grass.grass_position.push_back(terrain.evaluate_terrain(u,v, gui_scene));
-	}
-}
-
-void scene_exercise::set_bill_flower_position() {
-	unsigned seed = 4;
-	std::uniform_real_distribution<float> distrib(0.0,1.0);
-	std::default_random_engine generator(seed);
-	size_t number_of_flowers = 40;
-
-	for (size_t i=0; i<number_of_flowers; i++) {
-		float u = distrib(generator);
-		float v = distrib(generator);
-		flower.flower_position.push_back(terrain.evaluate_terrain(u,v, gui_scene));
-	}
 }
 
 void scene_exercise::set_gui() {

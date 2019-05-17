@@ -1,4 +1,6 @@
 #include "grass.hpp"
+#include "terrain.hpp"
+#include <random>
 
 using namespace vcl;
 
@@ -40,4 +42,17 @@ void Grass::draw(std::map<std::string,GLuint>& shaders, scene_structure& scene, 
 
 
 	glBindTexture(GL_TEXTURE_2D, scene.texture_white);
+}
+
+void Grass::set_bill_grass_position(gui_scene_structure& gui_scene, Terrain& terrain) {
+	unsigned seed = 3;
+	std::uniform_real_distribution<float> distrib(0.0,1.0);
+	std::default_random_engine generator(seed);
+	size_t number_of_grass = 40;
+
+	for (size_t i=0; i<number_of_grass; i++) {
+		float u = distrib(generator);
+		float v = distrib(generator);
+		grass_position.push_back(terrain.evaluate_terrain(u,v, gui_scene));
+	}
 }

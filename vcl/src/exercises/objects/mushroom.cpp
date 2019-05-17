@@ -1,4 +1,6 @@
 #include "mushroom.hpp"
+#include "terrain.hpp"
+#include <random>
 
 using namespace vcl;
 
@@ -23,5 +25,18 @@ void Mushroom::draw(std::map<std::string,GLuint>& shaders, scene_structure& scen
 		if (wireframe) { // wireframe if asked from the GUI
 			mushroom.draw(shaders["wireframe"], scene.camera);
 		}
+	}
+}
+
+void Mushroom::set_mushroom_position(gui_scene_structure& gui_scene, Terrain& terrain) {
+	unsigned seed = 2;
+	std::uniform_real_distribution<float> distrib(0.0,1.0);
+	std::default_random_engine generator(seed);
+	size_t number_of_mushrooms = 40;
+
+	for (size_t i=0; i<number_of_mushrooms; i++) {
+		float u = distrib(generator);
+		float v = distrib(generator);
+		mushroom_position.push_back(terrain.evaluate_terrain(u,v, gui_scene));
 	}
 }
