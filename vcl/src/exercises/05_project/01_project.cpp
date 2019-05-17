@@ -26,13 +26,10 @@ void print_grid(vector<vector<bool>> &grid);
 void scene_exercise::setup_data(std::map<std::string,GLuint>& , scene_structure& scene, gui_structure& ) {
 	// Load a texture image on GPU and stores its ID
 	terrain_texture_id = texture_gpu( image_load_png("data/grass.png") );
-	bill_grass_texture_id = texture_gpu( image_load_png("data/billboard_grass.png") );
-	bill_flower_texture_id = texture_gpu( image_load_png("data/billboard_redflowers.png") );
 
 	trajectory.setup();
 	penguin.setup(0.5f);
 
-	set_terrain();
 	set_tree_position();
 	set_mushroom_position();
 	set_bill_grass_position();
@@ -41,11 +38,10 @@ void scene_exercise::setup_data(std::map<std::string,GLuint>& , scene_structure&
 	setup_terrain();
 	tree.setup();
 	mushroom.setup();
-	setup_grass();
-	setup_flower();
+	grass.setup();
+	flower.setup();
 	skybox.setup();
 	palm_tree.setup();
-
 
 	// Setup initial camera mode and position
 	scene.camera.camera_type = camera_control_spherical_coordinates;
@@ -53,7 +49,6 @@ void scene_exercise::setup_data(std::map<std::string,GLuint>& , scene_structure&
 	scene.camera.apply_rotation(0,0,0,1.2f);
 	scene.camera.apply_translation_orthogonal_to_screen_plane(-16.0f);
 }
-
 
 
 /** This function is called at each frame of the animation loop.
@@ -74,9 +69,9 @@ void scene_exercise::frame_draw(std::map<std::string,GLuint>& shaders, scene_str
 	//  - Transparent elements cannot use depth buffer
 	//  - They are supposed to be display from furest to nearest elements
 	glDepthMask(false);
-	draw_flower(shaders, scene);
+	flower.draw(shaders, scene, gui_scene.wireframe);
 	skybox.draw(shaders, scene, gui_scene.wireframe);
-	draw_grass(shaders, scene);
+	grass.draw(shaders, scene, gui_scene.wireframe);
 	glDepthMask(true);
 
 	trajectory.draw(shaders, scene, gui_scene.trajectory);
@@ -84,32 +79,14 @@ void scene_exercise::frame_draw(std::map<std::string,GLuint>& shaders, scene_str
 }
 
 void scene_exercise::setup_terrain() {
+	// Clear memory in case of pre-existing terrain
+	terrain.data_gpu.clear();
+
 	// Create visual terrain surface
-	//terrain = create_terrain();
-	//terrain.uniform_parameter.color = {0.6f, 0.85f, 0.5f};
-	terrain.uniform_parameter.shading.specular = 0.0f; // non-specular terrain material
+	terrain = create_terrain(gui_scene);
+	terrain.uniform_parameter.color = {1.0f, 1.0f, 1.0f};
+	terrain.uniform_parameter.shading.specular = 0.0f;
 }
-
-void scene_exercise::setup_grass() {
-	mesh grass_surface_cpu;
-	grass_surface_cpu.position     = {{-0.2f,0,0}, { 0.2f,0,0}, { 0.2f, 0, 0.4f}, {-0.2f, 0, 0.4f}};
-	grass_surface_cpu.texture_uv   = {{0,1}, {1,1}, {1,0}, {0,0}};
-	grass_surface_cpu.connectivity = {{0,1,2}, {0,2,3}};
-
-	grass_surface = grass_surface_cpu;
-	grass_surface.uniform_parameter.shading = {1,0,0}; // set pure ambiant component (no diffuse, no specular) - allow to only see the color of the texture
-}
-
-void scene_exercise::setup_flower() {
-	mesh flower_surface_cpu;
-	flower_surface_cpu.position     = {{-0.2f,0,0}, { 0.2f,0,0}, { 0.2f, 0.4f, 0}, {-0.2f, 0.4f, 0}};
-	flower_surface_cpu.texture_uv   = {{0,1}, {1,1}, {1,0}, {0,0}};
-	flower_surface_cpu.connectivity = {{0,1,2}, {0,2,3}};
-
-	flower_surface = flower_surface_cpu;
-	flower_surface.uniform_parameter.shading = {1,0,0}; // set pure ambiant component (no diffuse, no specular) - allow to only see the color of the texture
-}
-
 
 void scene_exercise::draw_terrain(std::map<std::string,GLuint>& shaders, scene_structure& scene) {
 	// Before displaying a textured surface: bind the associated texture id
@@ -132,58 +109,6 @@ void scene_exercise::draw_terrain(std::map<std::string,GLuint>& shaders, scene_s
 	}
 }
 
-
-void scene_exercise::draw_flower(std::map<std::string,GLuint>& shaders, scene_structure& scene) {
-	// Enable use of alpha component as color blending for transparent elements
-	//  new color = previous color + (1-alpha) current color
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE); // avoids sampling artifacts
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE); // avoids sampling artifacts
-
-	// Display a billboard always facing the camera direction
-	// ********************************************************** //
-	glBindTexture(GL_TEXTURE_2D, bill_flower_texture_id);
-	flower_surface.uniform_parameter.translation = {0,0,0};
-
-	for (size_t i=0; i < flower_position.size(); i++) {
-		flower_surface.uniform_parameter.translation = flower_position[i] + vec3(0.0f, 0.0f, -0.03f);
-		flower_surface.uniform_parameter.rotation = scene.camera.orientation;
-		flower_surface.draw(shaders["mesh"], scene.camera);
-		if(gui_scene.wireframe)
-			flower_surface.draw(shaders["wireframe"], scene.camera);
-	}
-	glBindTexture(GL_TEXTURE_2D, scene.texture_white);
-}
-
-
-void scene_exercise::draw_grass(std::map<std::string,GLuint>& shaders, scene_structure& scene) {
-	// Display two orthogonal billboards with static orientation
-	// ********************************************************** //
-	glBindTexture(GL_TEXTURE_2D, bill_grass_texture_id);
-	const mat3 Identity = mat3::identity();
-	const mat3 R = rotation_from_axis_angle_mat3({0,0,1}, 3.14f/2.0f); // orthogonal rotation
-
-	grass_surface.uniform_parameter.translation = {0,0,0};
-
-	for (size_t i=0; i < grass_position.size(); i++) {
-		grass_surface.uniform_parameter.translation = grass_position[i] + vec3(0.0f, 0.0f, -0.03f);
-		grass_surface.uniform_parameter.rotation = Identity;
-		grass_surface.draw(shaders["mesh"], scene.camera);
-		if(gui_scene.wireframe)
-			grass_surface.draw(shaders["wireframe"], scene.camera);
-
-		grass_surface.uniform_parameter.rotation = R;
-		grass_surface.draw(shaders["mesh"], scene.camera);
-		if(gui_scene.wireframe)
-			grass_surface.draw(shaders["wireframe"], scene.camera);
-	}
-
-
-	glBindTexture(GL_TEXTURE_2D, scene.texture_white);
-}
-
 void scene_exercise::mouse_click(scene_structure& scene, GLFWwindow* window, int button, int action, int mods) {
 	trajectory.mouse_click(scene, window, button, action, mods);
 }
@@ -192,15 +117,6 @@ void scene_exercise::mouse_move(scene_structure& scene, GLFWwindow* window) {
 	trajectory.mouse_move(scene, window);
 }
 
-void scene_exercise::set_terrain() {
-	// Clear memory in case of pre-existing terrain
-	terrain.data_gpu.clear();
-
-	// Create visual terrain surface
-	terrain = create_terrain(gui_scene);
-	terrain.uniform_parameter.color = {1.0f, 1.0f, 1.0f};
-	terrain.uniform_parameter.shading.specular = 0.0f;
-}
 
 float evaluate_terrain_z_h_p_sigma(float u, float v, float h, float sigma, vec2 p) {
 	const float d = norm(vec2(u,v)-p)/sigma;
@@ -438,7 +354,7 @@ void scene_exercise::set_bill_grass_position() {
 	for (size_t i=0; i<number_of_grass; i++) {
 		float u = distrib(generator);
 		float v = distrib(generator);
-		grass_position.push_back(evaluate_terrain(u,v, gui_scene));
+		grass.grass_position.push_back(evaluate_terrain(u,v, gui_scene));
 	}
 }
 
@@ -451,7 +367,7 @@ void scene_exercise::set_bill_flower_position() {
 	for (size_t i=0; i<number_of_flowers; i++) {
 		float u = distrib(generator);
 		float v = distrib(generator);
-		flower_position.push_back(evaluate_terrain(u,v, gui_scene));
+		flower.flower_position.push_back(evaluate_terrain(u,v, gui_scene));
 	}
 }
 
