@@ -118,8 +118,11 @@ float Terrain::evaluate_terrain_z(float u, float v) {
 	z += evaluate_terrain_z_h_p_sigma(u, v, h0, sigma0, u0);
 	z += evaluate_terrain_z_h_p_sigma(u, v, h1, sigma1, u1);
 	z += evaluate_terrain_z_h_p_sigma(u, v, h2, sigma2, u2);
-
 	return z;
+}
+
+float Terrain::evaluate_terrain_z_real(float x, float y) {
+	return evaluate_terrain_z(x/20.0f + 0.5f, y/20.0f + 0.5f);
 }
 
 // Evaluate 3D position of the terrain for any (u,v) \in [0,1]

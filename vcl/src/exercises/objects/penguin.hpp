@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../../exercises/base_exercise/base_exercise.hpp"
+#include <iostream>
 
 class Penguin {
 public:
@@ -9,7 +10,6 @@ public:
 
 	vcl::timer_interval penguin_timer;
 
-private:
 	vcl::mesh_drawable_hierarchy hierarchy;
-
+	private:
 };

@@ -13,6 +13,7 @@
 #include "../objects/flower.hpp"
 #include "../objects/terrain.hpp"
 #include "../objects/gui.hpp"
+#include "../objects/penguinPlayer.hpp"
 
 #ifdef INF443_01_PROJECT
 // Stores some parameters that can be set from the GUI
@@ -49,10 +50,14 @@ struct scene_exercise : base_scene_exercise
     void mouse_click(scene_structure& scene, GLFWwindow* window, int button, int action, int mods);
     // Called every time the mouse is moved
     void mouse_move(scene_structure& scene, GLFWwindow* window);
+	void key_press(scene_structure& scene, GLFWwindow* window, int key, int scancode, int action, int mods);
+
 
 	Trajectory trajectory;
 	Penguin penguin;
 	Palm_tree palm_tree;
+
+	PenguinPlayer penguinPlayer;
 
     gui_scene_structure gui_scene;
 };

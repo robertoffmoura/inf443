@@ -16,5 +16,6 @@ struct base_scene_exercise
 
     void mouse_click(scene_structure& scene, GLFWwindow* window, int button, int action, int mods);
     void mouse_move(scene_structure& scene, GLFWwindow* window);
+	void key_press(GLFWwindow* window, int key, int scancode, int action, int mods);
 
 };

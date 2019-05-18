@@ -118,7 +118,7 @@ void camera_control_glfw::update_key_press(camera_scene& camera, GLFWwindow* win
 }
 
 void camera_control_glfw::update_keyframe(camera_scene& camera) {
-	if (moving_up) {
+	/*if (moving_up) {
 		//std::cout << "up" << std::endl;
 		//camera.apply_translation_in_screen_plane(0, 0.01f);
 		camera.apply_translation_orthogonal_to_screen_plane( 0.1f );
@@ -138,7 +138,6 @@ void camera_control_glfw::update_keyframe(camera_scene& camera) {
 		//std::cout << "right" << std::endl;
 		camera.apply_translation_in_screen_plane(-0.1f, 0);
 	}
-
 	if (moving_camera_up) {
 		camera.apply_rotation(0, -0.01f, 0, 0);
 	} else if (moving_camera_down) {
@@ -146,9 +145,28 @@ void camera_control_glfw::update_keyframe(camera_scene& camera) {
 	}
 
 	if (moving_camera_left) {
-		camera.apply_rotation(0.01f, 0, 0, 0);
+		camera.apply_rotation(0.02f, 0, 0, 0);
 	} else if (moving_camera_right) {
-		camera.apply_rotation(-0.01f, 0, 0, 0);
+		camera.apply_rotation(-0.02f, 0, 0, 0);
+	}
+	*/
+
+	if (moving_left) {
+		camera.apply_rotation(0.02f, 0, 0, 0);
+	} else if (moving_right) {
+		camera.apply_rotation(-0.02f, 0, 0, 0);
+	}
+
+	if (moving_camera_up) {
+		camera.apply_rotation(0, 0.01f, 0, 0);
+	} else if (moving_camera_down) {
+		camera.apply_rotation(0, -0.01f, 0, 0);
+	}
+
+	if (moving_camera_left) {
+		camera.apply_rotation(0.05f, 0, 0, 0);
+	} else if (moving_camera_right) {
+		camera.apply_rotation(-0.05f, 0, 0, 0);
 	}
 }
 

@@ -15,6 +15,7 @@ using std::vector;
 void scene_exercise::setup_data(std::map<std::string,GLuint>& , scene_structure& scene, gui_structure& ) {
 	trajectory.setup();
 	penguin.setup(0.5f);
+	penguinPlayer.setup(0.5f);
 
 	tree.set_tree_position(gui_scene, terrain);
 	mushroom.set_mushroom_position(gui_scene, terrain);
@@ -31,7 +32,8 @@ void scene_exercise::setup_data(std::map<std::string,GLuint>& , scene_structure&
 
 	// Setup initial camera mode and position
 	scene.camera.camera_type = camera_control_spherical_coordinates;
-	scene.camera.scale = 0.01f;
+	//scene.camera.scale = 0.01f;
+	scene.camera.scale = 3.0f;
 	scene.camera.apply_rotation(0,0,0,1.2f);
 	scene.camera.apply_translation_orthogonal_to_screen_plane(-16.0f);
 }
@@ -62,6 +64,7 @@ void scene_exercise::frame_draw(std::map<std::string,GLuint>& shaders, scene_str
 
 	trajectory.draw(shaders, scene, gui_scene.trajectory);
 	penguin.draw(shaders, scene, gui_scene.wireframe, trajectory.position(), trajectory.position_derivative());
+	penguinPlayer.draw(shaders, scene, gui_scene.wireframe, {0,0,0}, {0,0,0}, terrain);
 }
 
 void scene_exercise::mouse_click(scene_structure& scene, GLFWwindow* window, int button, int action, int mods) {
@@ -70,6 +73,10 @@ void scene_exercise::mouse_click(scene_structure& scene, GLFWwindow* window, int
 
 void scene_exercise::mouse_move(scene_structure& scene, GLFWwindow* window) {
 	trajectory.mouse_move(scene, window);
+}
+
+void scene_exercise::key_press(scene_structure& scene, GLFWwindow* window, int key, int scancode, int action, int mods) {
+	penguinPlayer.key_press(scene, window, key, scancode, action, mods);
 }
 
 void scene_exercise::set_gui() {

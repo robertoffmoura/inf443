@@ -28,8 +28,7 @@ enum camera_control_type {camera_control_trackball, camera_control_spherical_coo
     - a scale parameter (zoom in/out) - float
     - a translation (camera position) - vec3
     - an orientation - mat3 */
-struct camera_scene
-{
+struct camera_scene {
     /** Base distance between camera and (0,0,0) along z-direction */
     static constexpr float scale0 = 3.0f;
 

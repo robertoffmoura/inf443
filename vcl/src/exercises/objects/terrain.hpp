@@ -15,6 +15,7 @@ public:
 	vcl::mesh create_terrain(const gui_scene_structure& gui_scene);
 	float evaluate_terrain_z_h_p_sigma(float u, float v, float h, float sigma, vcl::vec2 p);
 	float evaluate_terrain_z(float u, float v);
+	float evaluate_terrain_z_real(float x, float y);
 	vcl::vec3 evaluate_terrain(float u, float v, const gui_scene_structure& gui_scene);
 private:
 

@@ -58,8 +58,8 @@ void Penguin::setup(float scale) {
 	hierarchy.add_element(neck, "neck", "body", {0,0.8f*r_body1,0});
 	hierarchy.add_element(head, "head", "neck", {0,0,1.2f*r_head});
 	hierarchy.add_element(belly, "belly", "body", {0,0,0});
-	hierarchy.add_element(foot, "foot_left", "body", {0.625f*r_body0,-0.8f*r_body1,0}, rotation_from_axis_angle_mat3({0,1,0}, 0.5f));
-	hierarchy.add_element(foot, "foot_right", "body", {-0.625f*r_body0,-0.8f*r_body1,0}, rotation_from_axis_angle_mat3({0,1,0}, -0.5f));
+	hierarchy.add_element(foot, "foot_left", "body", {-0.625f*r_body0,-0.8f*r_body1,0}, rotation_from_axis_angle_mat3({0,1,0}, 0.3f));
+	hierarchy.add_element(foot, "foot_right", "body", {0.625f*r_body0,-0.8f*r_body1,0}, rotation_from_axis_angle_mat3({0,1,0}, -0.3f));
 
 	hierarchy.add_element(eye, "eye_left", "head",{r_head/3,r_head/1.5f,r_head/2});
 	hierarchy.add_element(eye, "eye_right", "head",{-r_head/3,r_head/1.5f,r_head/2});
