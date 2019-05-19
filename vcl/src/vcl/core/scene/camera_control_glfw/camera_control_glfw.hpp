@@ -17,13 +17,6 @@ public:
 	void update_keyframe(camera_scene& camera);
     bool update = true;
 
-private:
-
-    /** previous mouse position (x-coordinate) */
-    float x0 = 0.0f;
-    /** previous mouse position (y-coordinate) */
-    float y0 = 0.0f;
-
 	bool moving_up;
 	bool moving_down;
 	bool moving_left;
@@ -33,6 +26,13 @@ private:
 	bool moving_camera_down;
 	bool moving_camera_left;
 	bool moving_camera_right;
+
+private:
+
+    /** previous mouse position (x-coordinate) */
+    float x0 = 0.0f;
+    /** previous mouse position (y-coordinate) */
+    float y0 = 0.0f;
 
 };
 

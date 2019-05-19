@@ -128,9 +128,9 @@ mesh create_curved_cylinder(float r_cylinder, float angle, float r0, float r2, v
 
 	// Fill cylinder geometry
 	for (size_t i=0; i<N2; i++) {
+		const float a = -angle + i/(1.0*(N2-1)) * 2*angle;
+		vec3 center = {r0*cos(a), 0, r2*sin(a)};
 		for (size_t ku=0; ku<N; ++ku) {
-			const float a = -angle + i/(1.0*(N2-1)) * 2*angle;
-			vec3 center = {r0*cos(a), 0, r2*sin(a)};
 
 			// Compute local parametric coordinates (u,v) \in [0,1]
 			const float u = sin(ku /(1.0*N) * 2*M_PI );

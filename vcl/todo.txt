@@ -1,0 +1,3 @@
+-create standing animation
+-change lower body part of the penguin (less round)
+

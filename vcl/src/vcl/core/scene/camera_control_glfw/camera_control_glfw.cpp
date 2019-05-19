@@ -150,7 +150,7 @@ void camera_control_glfw::update_keyframe(camera_scene& camera) {
 		camera.apply_rotation(-0.02f, 0, 0, 0);
 	}
 	*/
-
+	/*
 	if (moving_left) {
 		camera.apply_rotation(0.02f, 0, 0, 0);
 	} else if (moving_right) {
@@ -168,6 +168,7 @@ void camera_control_glfw::update_keyframe(camera_scene& camera) {
 	} else if (moving_camera_right) {
 		camera.apply_rotation(-0.05f, 0, 0, 0);
 	}
+	*/
 }
 
 }

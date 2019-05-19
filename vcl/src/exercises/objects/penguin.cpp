@@ -5,6 +5,8 @@ using namespace vcl;
 mesh mesh_foot(float scale);
 mesh mesh_primitive_quad_scale(float scale, const vec3& p00, const vec3& p10, const vec3& p11, const vec3& p01);
 mesh mesh_primitive_ellipsoid(float radius0, float radius1, float radius2, const vec3& p0, size_t Nu, size_t Nv);
+mesh mesh_primitive_prism(float scale, float height, const vec3& p00, const vec3& p10, const vec3& p11, const vec3& p01);
+
 
 void Penguin::setup(float scale) {
 	const float r_head = 0.25f * scale;
@@ -35,21 +37,33 @@ void Penguin::setup(float scale) {
 	mesh_drawable beak = mesh_primitive_cone(0.52f*r_head,  {0,0,0}, {0,1.2f*r_head,0}, 20, 20);
 	beak.uniform_parameter.color = {1.0f, 0.7f, 0.4f};
 
-	mesh_drawable arm_left = mesh_primitive_quad_scale(arm, {0.2f,0.3f,0}, {0.4f,0.2f,0}, {0.4f,0,0}, {0.2f,-0.1f,0});
-	mesh_drawable arm_lower_left = mesh_primitive_quad_scale(arm, {0,0.2f,0}, {0.2f,0.1f,0}, {0.2f,0,0}, {0,0,0});
-	mesh_drawable hand_left = mesh_primitive_quad_scale(arm, {0,0.1f,0}, {0.03f,0.07f,0}, {0.03f,0.03f,0}, {0,0,0});
+	/*
+	mesh_drawable arm_right = mesh_primitive_quad_scale(arm, {0.2f,0.25f,0}, {0.4f,0.2f,0}, {0.4f,0.025f,0}, {0.2f,0.025f,0});
+	mesh_drawable arm_lower_right = mesh_primitive_quad_scale(arm, {0,0.2f,0}, {0.2f,0.1f,0}, {0.2f,0,0}, {0,0.025f,0});
+	mesh_drawable hand_right = mesh_primitive_quad_scale(arm, {0,0.1f,0}, {0.03f,0.07f,0}, {0.03f,0.03f,0}, {0,0,0});
 
-	mesh_drawable arm_right = mesh_primitive_quad_scale(arm, {-0.2f,0.3f,0}, {-0.4f,0.2f,0}, {-0.4f,0,0}, {-0.2f,-0.1f,0});
-	mesh_drawable arm_lower_right = mesh_primitive_quad_scale(arm, {-0,0.2f,0}, {-0.2f,0.1f,0}, {-0.2f,0,0}, {-0,0,0});
-	mesh_drawable hand_right = mesh_primitive_quad_scale(arm, {-0,0.1f,0}, {-0.03f,0.07f,0}, {-0.03f,0.03f,0}, {0,0,0});
+	mesh_drawable arm_left = mesh_primitive_quad_scale(arm, {-0.2f,0.25f,0}, {-0.4f,0.2f,0}, {-0.4f,0.025f,0}, {-0.2f,0.025f,0});
+	mesh_drawable arm_lower_left = mesh_primitive_quad_scale(arm, {-0,0.2f,0}, {-0.2f,0.1f,0}, {-0.2f,0,0}, {-0,0.025f,0});
+	mesh_drawable hand_left = mesh_primitive_quad_scale(arm, {-0,0.1f,0}, {-0.03f,0.07f,0}, {-0.03f,0.03f,0}, {0,0,0});
+	*/
+	
+	mesh_drawable arm_right = mesh_primitive_prism(arm, arm/60, {0.2f,0.25f,0}, {0.4f,0.2f,0}, {0.4f,0.025f,0}, {0.2f,0.025f,0});
+	mesh_drawable arm_lower_right = mesh_primitive_prism(arm, arm/60, {0,0.2f,0}, {0.2f,0.1f,0}, {0.2f,0,0}, {0,0.025f,0});
+	mesh_drawable hand_right = mesh_primitive_prism(arm, arm/60, {0,0.1f,0}, {0.03f,0.07f,0}, {0.03f,0.03f,0}, {0,0,0});
 
+	mesh_drawable arm_left = mesh_primitive_prism(arm, -arm/60, {-0.2f,0.25f,0}, {-0.4f,0.2f,0}, {-0.4f,0.025f,0}, {-0.2f,0.025f,0});
+	mesh_drawable arm_lower_left = mesh_primitive_prism(arm, -arm/60, {-0,0.2f,0}, {-0.2f,0.1f,0}, {-0.2f,0,0}, {-0,0.025f,0});
+	mesh_drawable hand_left = mesh_primitive_prism(arm, -arm/60, {-0,0.1f,0}, {-0.03f,0.07f,0}, {-0.03f,0.03f,0}, {0,0,0});
+	
+	//mesh_drawable test = mesh_primit
+	
 	arm_left.uniform_parameter.color = {0,0,0};
 	arm_lower_left.uniform_parameter.color = {0,0,0};
 	hand_left.uniform_parameter.color = {0,0,0};
 	arm_right.uniform_parameter.color = {0,0,0};
 	arm_lower_right.uniform_parameter.color = {0,0,0};
 	hand_right.uniform_parameter.color = {0,0,0};
-
+	
 	mesh_drawable foot = mesh_foot(foot_scale);
 	foot.uniform_parameter.color = {1.0f, 0.7f, 0.4f};
 
@@ -67,13 +81,13 @@ void Penguin::setup(float scale) {
 	hierarchy.add_element(pupil, "pupil_right", "head",{-1.2f*r_head/3, 1.2f*r_head/1.5f, 1.2f*r_head/2});
 	hierarchy.add_element(beak, "beak", "head", {0,r_head/1.5f,0});
 
-	hierarchy.add_element(arm_left, "arm_left", "body", {0, -0.2f*r_body1, 0});
-	hierarchy.add_element(arm_lower_left, "arm_lower_left", "arm_left", {0.4f*arm,0,0});
-	hierarchy.add_element(hand_left, "hand_left", "arm_lower_left", {0.2f*arm,0,0});
-
 	hierarchy.add_element(arm_right, "arm_right", "body", {0, -0.1f*r_body1, 0});
-	hierarchy.add_element(arm_lower_right, "arm_lower_right", "arm_right", {-0.4f*arm,0,0});
-	hierarchy.add_element(hand_right, "hand_right", "arm_lower_right", {-0.2f*arm,0,0});
+	hierarchy.add_element(arm_lower_right, "arm_lower_right", "arm_right", {0.4f*arm,0,0});
+	hierarchy.add_element(hand_right, "hand_right", "arm_lower_right", {0.2f*arm,0,0});
+
+	hierarchy.add_element(arm_left, "arm_left", "body", {0, -0.1f*r_body1, 0});
+	hierarchy.add_element(arm_lower_left, "arm_lower_left", "arm_left", {-0.4f*arm,0,0});
+	hierarchy.add_element(hand_left, "hand_left", "arm_lower_left", {-0.2f*arm,0,0});
 
 	penguin_timer.scale = 0.8f;
 }
@@ -92,13 +106,13 @@ void Penguin::draw(std::map<std::string,GLuint>& shaders, scene_structure& scene
 	hierarchy.rotation("foot_left") = rotation_from_axis_angle_mat3({1,0,0}, -0.55f*std::sin(4*3.14f*(pt-0.4f)));
 	hierarchy.rotation("foot_right") = rotation_from_axis_angle_mat3({1,0,0}, 0.55f*std::sin(4*3.14f*(pt-0.4f)));
 
-	hierarchy.rotation("arm_left") = rotation_from_axis_angle_mat3({0,1,0}, 0.55f*std::sin(2*3.14f*(pt-0.4f)) );
-	hierarchy.rotation("arm_lower_left") = rotation_from_axis_angle_mat3({0,1,0}, 0.3f*std::sin(2*3.14f*(pt-0.4f)) );
-	hierarchy.rotation("hand_left") = rotation_from_axis_angle_mat3({0,1,0}, 0.3f*std::sin(2*3.14f*(pt-0.4f)) );
+	hierarchy.rotation("arm_right") = rotation_from_axis_angle_mat3({0,1,0}, 0.55f*std::sin(2*3.14f*(pt-0.4f)) );
+	hierarchy.rotation("arm_lower_right") = rotation_from_axis_angle_mat3({0,1,0}, 0.3f*std::sin(2*3.14f*(pt-0.4f)) );
+	hierarchy.rotation("hand_right") = rotation_from_axis_angle_mat3({0,1,0}, 0.3f*std::sin(2*3.14f*(pt-0.4f)) );
 
-	hierarchy.rotation("arm_right") = rotation_from_axis_angle_mat3({0,-1,0}, 0.55f*std::sin(2*3.14f*(pt-0.4f)) );
-	hierarchy.rotation("arm_lower_right") = rotation_from_axis_angle_mat3({0,-1,0}, 0.3f*std::sin(2*3.14f*(pt-0.4f)) );
-	hierarchy.rotation("hand_right") = rotation_from_axis_angle_mat3({0,-1,0}, 0.3f*std::sin(2*3.14f*(pt-0.4f)) );
+	hierarchy.rotation("arm_left") = rotation_from_axis_angle_mat3({0,-1,0}, 0.55f*std::sin(2*3.14f*(pt-0.4f)) );
+	hierarchy.rotation("arm_lower_left") = rotation_from_axis_angle_mat3({0,-1,0}, 0.3f*std::sin(2*3.14f*(pt-0.4f)) );
+	hierarchy.rotation("hand_left") = rotation_from_axis_angle_mat3({0,-1,0}, 0.3f*std::sin(2*3.14f*(pt-0.4f)) );
 
 	const vec3 p = position;
 	hierarchy.translation("body") += p;
@@ -156,6 +170,20 @@ mesh mesh_foot(float scale) {
 	shape.connectivity.push_back({4, 9, 5});
 
 	return shape;
+}
+
+mesh mesh_primitive_prism(float scale, float height, const vec3& p00, const vec3& p10, const vec3& p11, const vec3& p01) {
+	// Compute normal of the quadrangle (orthogonal to the two basis vectors p00->p01 and p00->p10)
+    const vec3 n = normalize(cross(normalize(p10-p00), normalize(p01-p00)));
+
+    // Fill per-vertex buffers
+    mesh prism;
+    prism.position     = {scale*p00, scale*p10, scale*p11, scale*p01, scale*(p10 + p11)/2.0f + height*n, scale*(p00 + p01)/2.0f + height*n};         // 3D-coordinates
+    //quad.normal       = {n,n,n,n};                    // same normal for all vertices
+    //prism.texture_uv   = {{0,0}, {1,0}, {1,1}, {0,1}}; // 2D (u,v) - texture coordinates
+    prism.connectivity = {{0,1,2}, {0,2,3}, {0,1,4}, {0,4,5}, {5,4,2}, {5,2,3}, {1,2,4}, {3,0,5}};
+
+    return prism;
 }
 
 mesh mesh_primitive_quad_scale(float scale, const vec3& p00, const vec3& p10, const vec3& p11, const vec3& p01) {
