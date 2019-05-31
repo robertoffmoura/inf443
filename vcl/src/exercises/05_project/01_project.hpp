@@ -14,6 +14,7 @@
 #include "../objects/terrain.hpp"
 #include "../objects/gui.hpp"
 #include "../objects/sea.hpp"
+#include "../objects/zebra.hpp"
 
 #ifdef INF443_01_PROJECT
 // Stores some parameters that can be set from the GUI
@@ -46,6 +47,7 @@ struct scene_exercise : base_scene_exercise
     //Flower flower;
 	Skybox skybox;
 	Sea sea;
+	Zebra zebra;
 
 	/*
 	vcl::mesh_drawable trunk;

@@ -31,6 +31,7 @@ void scene_exercise::setup_data(std::map<std::string,GLuint>& , scene_structure&
 	skybox.setup();
 	palm_tree.setup();
 	sea.setup();
+	zebra.setup();
 
 	// Setup initial camera mode and position
 	scene.camera.camera_type = camera_control_spherical_coordinates;
@@ -70,6 +71,7 @@ void scene_exercise::frame_draw(std::map<std::string,GLuint>& shaders, scene_str
 	//tree.draw(shaders, scene, gui_scene.wireframe);
 	//mushroom.draw(shaders, scene, gui_scene.wireframe);
 	palm_tree.draw(shaders, scene, gui_scene.wireframe);
+	zebra.draw(shaders, scene, gui_scene.wireframe);
 
 	// Disable depth buffer writing
 	//  - Transparent elements cannot use depth buffer
