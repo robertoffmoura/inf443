@@ -25,6 +25,8 @@ public:
 	bool moving_right;
 	bool moving;
 
+	vcl::timer_interval penguin_standing_timer;
+
 private:
 	//vcl::mesh_drawable_hierarchy hierarchy;
 

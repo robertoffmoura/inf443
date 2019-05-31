@@ -46,7 +46,7 @@ void Penguin::setup(float scale) {
 	mesh_drawable arm_lower_left = mesh_primitive_quad_scale(arm, {-0,0.2f,0}, {-0.2f,0.1f,0}, {-0.2f,0,0}, {-0,0.025f,0});
 	mesh_drawable hand_left = mesh_primitive_quad_scale(arm, {-0,0.1f,0}, {-0.03f,0.07f,0}, {-0.03f,0.03f,0}, {0,0,0});
 	*/
-	
+
 	mesh_drawable arm_right = mesh_primitive_prism(arm, arm/60, {0.2f,0.25f,0}, {0.4f,0.2f,0}, {0.4f,0.025f,0}, {0.2f,0.025f,0});
 	mesh_drawable arm_lower_right = mesh_primitive_prism(arm, arm/60, {0,0.2f,0}, {0.2f,0.1f,0}, {0.2f,0,0}, {0,0.025f,0});
 	mesh_drawable hand_right = mesh_primitive_prism(arm, arm/60, {0,0.1f,0}, {0.03f,0.07f,0}, {0.03f,0.03f,0}, {0,0,0});
@@ -54,16 +54,16 @@ void Penguin::setup(float scale) {
 	mesh_drawable arm_left = mesh_primitive_prism(arm, -arm/60, {-0.2f,0.25f,0}, {-0.4f,0.2f,0}, {-0.4f,0.025f,0}, {-0.2f,0.025f,0});
 	mesh_drawable arm_lower_left = mesh_primitive_prism(arm, -arm/60, {-0,0.2f,0}, {-0.2f,0.1f,0}, {-0.2f,0,0}, {-0,0.025f,0});
 	mesh_drawable hand_left = mesh_primitive_prism(arm, -arm/60, {-0,0.1f,0}, {-0.03f,0.07f,0}, {-0.03f,0.03f,0}, {0,0,0});
-	
+
 	//mesh_drawable test = mesh_primit
-	
+
 	arm_left.uniform_parameter.color = {0,0,0};
 	arm_lower_left.uniform_parameter.color = {0,0,0};
 	hand_left.uniform_parameter.color = {0,0,0};
 	arm_right.uniform_parameter.color = {0,0,0};
 	arm_lower_right.uniform_parameter.color = {0,0,0};
 	hand_right.uniform_parameter.color = {0,0,0};
-	
+
 	mesh_drawable foot = mesh_foot(foot_scale);
 	foot.uniform_parameter.color = {1.0f, 0.7f, 0.4f};
 
@@ -218,4 +218,3 @@ mesh mesh_primitive_ellipsoid(float radius0, float radius1, float radius2, const
 
 	return shape;
 }
-
