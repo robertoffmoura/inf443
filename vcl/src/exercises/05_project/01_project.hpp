@@ -13,6 +13,7 @@
 #include "../objects/flower.hpp"
 #include "../objects/terrain.hpp"
 #include "../objects/gui.hpp"
+#include "../objects/sea.hpp"
 
 #ifdef INF443_01_PROJECT
 // Stores some parameters that can be set from the GUI
@@ -39,11 +40,18 @@ struct scene_exercise : base_scene_exercise
     // visual representation of a surface
     Terrain terrain;
 
-	Tree tree;
-	Mushroom mushroom;
-	Grass grass;
-    Flower flower;
+	//Tree tree;
+	//Mushroom mushroom;
+	//Grass grass;
+    //Flower flower;
 	Skybox skybox;
+	Sea sea;
+
+	/*
+	vcl::mesh_drawable trunk;
+	GLuint will_texture_id;
+	*/
+
 
     // Called every time the mouse is clicked
     void mouse_click(scene_structure& scene, GLFWwindow* window, int button, int action, int mods);

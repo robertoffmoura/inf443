@@ -16,24 +16,32 @@ void scene_exercise::setup_data(std::map<std::string,GLuint>& , scene_structure&
 	trajectory.setup();
 	penguin.setup(0.5f);
 
-	tree.set_tree_position(gui_scene, terrain);
-	mushroom.set_mushroom_position(gui_scene, terrain);
-	grass.set_bill_grass_position(gui_scene, terrain);
-	flower.set_bill_flower_position(gui_scene, terrain);
+	//tree.set_tree_position(gui_scene, terrain);
+	//mushroom.set_mushroom_position(gui_scene, terrain);
+	//grass.set_bill_grass_position(gui_scene, terrain);
+	//flower.set_bill_flower_position(gui_scene, terrain);
+	palm_tree.set_tree_position(gui_scene, terrain);
+
 
 	terrain.setup(gui_scene);
-	tree.setup();
-	mushroom.setup();
-	grass.setup();
-	flower.setup();
+	//tree.setup();
+	//mushroom.setup();
+	//grass.setup();
+	//flower.setup();
 	skybox.setup();
 	palm_tree.setup();
+	sea.setup();
 
 	// Setup initial camera mode and position
 	scene.camera.camera_type = camera_control_spherical_coordinates;
 	scene.camera.scale = 0.01f;
 	scene.camera.apply_rotation(0,0,0,1.2f);
-	scene.camera.apply_translation_orthogonal_to_screen_plane(-16.0f);
+	scene.camera.apply_translation_orthogonal_to_screen_plane(-32.0f);
+
+	/*
+	trunk = create_cone_trunk(3.2f, 4.0f, 9.0f, {0, 0, 4.0f});
+	will_texture_id = texture_gpu( image_load_png("data/will.png") );
+	*/
 }
 
 
@@ -46,18 +54,32 @@ void scene_exercise::frame_draw(std::map<std::string,GLuint>& shaders, scene_str
 	glEnable( GL_POLYGON_OFFSET_FILL ); // avoids z-fighting when displaying wireframe
 	glPolygonOffset( 1.0, 1.0 );
 
+	/*
+	glBindTexture(GL_TEXTURE_2D, will_texture_id);
+	trunk.draw(shaders["mesh"], scene.camera);
+	glBindTexture(GL_TEXTURE_2D, scene.texture_white);
+	if (gui_scene.wireframe) { // wireframe if asked from the GUI
+		glPolygonOffset( 1.0, 1.0 );
+		trunk.draw(shaders["wireframe"], scene.camera);
+		//sand_terrain.draw(shaders["wireframe"], scene.camera);
+	}
+	*/
+
+
 	terrain.draw(shaders, scene, gui_scene.wireframe);
-	tree.draw(shaders, scene, gui_scene.wireframe);
-	mushroom.draw(shaders, scene, gui_scene.wireframe);
+	//tree.draw(shaders, scene, gui_scene.wireframe);
+	//mushroom.draw(shaders, scene, gui_scene.wireframe);
 	palm_tree.draw(shaders, scene, gui_scene.wireframe);
 
 	// Disable depth buffer writing
 	//  - Transparent elements cannot use depth buffer
 	//  - They are supposed to be display from furest to nearest elements
 	glDepthMask(false);
-	flower.draw(shaders, scene, gui_scene.wireframe);
 	skybox.draw(shaders, scene, gui_scene.wireframe);
-	grass.draw(shaders, scene, gui_scene.wireframe);
+	//sea.draw(shaders, scene, gui_scene.wireframe);
+	//flower.draw(shaders, scene, gui_scene.wireframe);
+	//grass.draw(shaders, scene, gui_scene.wireframe);
+	sea.draw(shaders, scene, gui_scene.wireframe);
 	glDepthMask(true);
 
 	trajectory.draw(shaders, scene, gui_scene.trajectory);

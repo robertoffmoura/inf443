@@ -11,5 +11,6 @@ vec3 evaluate_cylinder(float u, float v, int ku, float radius, float height);
 
 mesh create_cone(float radius, float height, float z_offset);
 
+mesh create_cone_trunk(float r_top, float r_bottom, float height, vec3 translation);
 
 }

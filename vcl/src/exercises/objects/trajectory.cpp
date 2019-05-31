@@ -16,8 +16,8 @@ void Trajectory::setup() {
 	//keyframe_position = {{0,0,0}, {3,0,0}, {3,3,0}, {6,3,0}, {9,3,0}, {9,0,0}, {12,0,0}, {12,-3,0}, {0,-3,0}, {0,0,0}, {3,0,0}, {3,3,0}};
 	const size_t N = 9;
 	for (size_t i=0; i<N+3; i++) {
-		const float u = 3*sin(i /(1.0*N) * 2*M_PI );
-		const float v = 3*cos(i /(1.0*N) * 2*M_PI );
+		const float u = 14*sin(i /(1.0*N) * 2*M_PI );
+		const float v = 14*cos(i /(1.0*N) * 2*M_PI );
 		keyframe_position.push_back({u, v, 2});
 	}
 	keyframe_time = {0,1,2,3,4,5,6,7,8,9,10,11};
@@ -26,6 +26,7 @@ void Trajectory::setup() {
 	timer.t_min = keyframe_time[1];
 	timer.t_max = keyframe_time[keyframe_time.size()-2];
 	timer.t = timer.t_min;
+	timer.scale = 0.160f;
 
 	// Prepare the visual elements
 	//surface = mesh_primitive_sphere();
